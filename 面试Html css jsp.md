@@ -39,7 +39,7 @@
 17、 javascript和java的关系？以及版本更迭？javascript，es6，typescript？ecmascript
 
 18、 javascrip的数据类型，常用的类型有哪些？变量的作用域范围如何划分？
-   局部作用域 作用在一个函数中
+   局部作用域 作用在一个函数中，java的局部变量作用在{}里面
 
 19、 javascrip中常用的数据类型有哪些？什么情况下被使用到？
 
