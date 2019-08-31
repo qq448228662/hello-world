@@ -349,10 +349,63 @@ BCnf 消除主属性对于码的部分与传递函数依赖
 ##什么是数据库死锁 ？ 加锁粒度？
 
 ##jdbc是如何加载数据库驱动的？jdbc是如何初始化数据库驱动的？有几种方式？
+类中有静态代码库，其加载到JVM时，会执行该静态代码库。而该代码块会把该类的对象实例自注册到DriverManager中
+
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;//JDBC加载数据库驱动的三种方法，此处是以sqlserver为例
+class PreparedStatementDemo {
+static{
+Connection conn = null;
+String sql = "select * from 账户";
+String url="jdbc:sqlserver:
+//localhost:1433;
+Database=JDBCWEB";
+try
+ {//第一种
+ Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
+ //第二种//
+ System.setProperty("jdbc.drivers", "com.microsoft.sqlserver.jdbc.SQLServerDriver");
+ //第三种//new com.microsoft.sqlserver.jdbc.SQLServerDriver();
+ conn = DriverManager.getConnection(url,"sa","123456");
+ System.out.println("连接成功");
+ PreparedStatement pstmt = conn.prepareStatement(sql);
+ ResultSet rs = pstmt.executeQuery();
+ while(rs.next()){
+ System.out.println (rs.getInt(1));
+ System.out.println (rs.getString(2));
+ System.out.println (rs.getString(3));
+ }
+ rs.close();
+ pstmt.close();
+ conn.close();
+ } catch (Exception e){
+ System.out.println("失败！");
+ e.printStackTrace();}}
+ public static void main(String args[]){
+
+}
+ }
+
+
+
+
 
 ##try catch 在1.7下with方式的资源回收？提示 【try（回收资源初始化 ）{}catch】
 
  
+try (
+
+                OutputStream outputStream = new FileOutputStream(new File("D:\\hellow.java"));
+
+                InputStream error = null;
+
+        ) {
+
+}
+try()中申请的资源会在{}结束后自动释放,另外()内定义的变量为final变量,所以括号内第二行的写法是不行的
+前提是，这些可关闭的资源必须实现 java.lang.AutoCloseable 接口。
  
  
  
