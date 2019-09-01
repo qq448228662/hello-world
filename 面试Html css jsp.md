@@ -37,23 +37,67 @@
 
 @20190930
 17、 javascript和java的关系？以及版本更迭？javascript，es6，typescript？ecmascript
+除了语法上有点像Java，其他部分基本上没啥关系。  ECMAScript是一种语言标准，而JavaScript是网景公司对ECMAScript标准的一种实现 
+这es6 是ECMAScript 的第六版修订，于 2015 年完成标准化。 
+ypeScript 是 Microsoft 开发和维护的一种面向对象的编程语言。它是 JavaScript 的超集，包含了 JavaScript 的所有元素，可以载入 JavaScript 代码运行，并扩展了 JavaScript 的语法。
 
 18、 javascrip的数据类型，常用的类型有哪些？变量的作用域范围如何划分？
    局部作用域 作用在一个函数中，java的局部变量作用在{}里面
+undefined、null、boolean、number、string 
+，基本数据类型是按值访问的，因此可以操作保存在变量中的实际的值。 从一个变量向另一个变量复制基本类型的值，会在变量对象上创建一个新值，然后把该值复制到为新变量分配的位置上 
+当代码在一个环境中执行时，会创建变量对象的一个作用域链，作用域链的用途是保证对执行环境有权访问的所有变量和函数的有序访问。
 
-19、 javascrip中常用的数据类型有哪些？什么情况下被使用到？
+19、 javascrip中常用的数据类型有哪些？什么情况下被使用到？ 
 
 20、undefined和null的区别？各在什么情况下使用？
+1.null是javascript的关键字，表示一个特殊值，常用来描述“空值“。typeof数据类型为object，因此，可认为null是一个特殊的对象。但实际上，通常认为null是它自有类型的唯一一个成员。
+2.undefined不是关键字，表示值的空缺，它是变量的一种取值，表明变量没有初始化。typeof数据类型为undefined。ECMAScript3中将undefined认为可读写的变量，此错误在ECMAScript5中修正，改为只读。
+3.null和undefined尽管有不同，但是都表示“值的空缺”。用“==”认为两者相等，需要用严格相等运算符“===”来区分它们。在希望值为布尔型它们的值都是假，即false。null和undefined都属于不拥有方法类型。
+4.使用情况区分：undefined是表示系统级的、出乎意料的类似错误的值的空缺。null是表示程序级别、正常的在意料之中的值的空缺。当需要作为参数传入函数时，用null更为合适。
 
 
 21、函数的声明方式有哪几种？
+function func1([参数]){
+/*函数体*/
+}
+var func2=function([参数]){
+/*函数体*/
+};
+var func3=function func4([参数]){
+/*函数体*/
+};
+
+
+上述第一种方式是最常用的方式，不用多说。
+第二种是将一匿名函数赋给一个变量，调用方法：func2([函数]);
+第三种是将func4赋给变量func3，调用方法：func3([函数]);或func4([函数]);
+ 
 
 22、函数调用之间的返回值？  默认是undefined  函数的传参形式？ 
+函数的形参					js的函数在调用时，形参可以不赋值，或者部分赋值，正常执行的。		
+形参的默认值是undefined				函数的返回值			
+js中函数默认返回undefined，也可以使用return语句自定义返回值。	
+函数作为实参传递:					在js中函数可以作为实参传递
 
 23、javascript由异常处理么？常用的异常处理有哪些？
+try{
+    //your code 
+}catch(e){
+    //while raise a error ,will exc this code
+}
+catch(e){
+    //while raise a error,and pre catch has beed run  ,will exc this code
+}
+catch(e){
+    //while raise a error,and pre catch has beed run  ,will exc this code
+}final{
+    //whether raise a error, this code will be run 
+}
 
 24、javascript是面向对象的吗？如何创建一个类？
-
+自然使面向对象的 ，   
+var obj = new Object(); 
+方式2 : var obj = {};
 25、javascript如何实现类的继承？
 
 26、原型prototype和原型链？
