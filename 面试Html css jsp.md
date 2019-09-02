@@ -49,6 +49,8 @@ undefined、null、boolean、number、string
 
 19、 javascrip中常用的数据类型有哪些？什么情况下被使用到？ 
 
+null  undefine  number string object boolean 数组 
+
 20、undefined和null的区别？各在什么情况下使用？
 1.null是javascript的关键字，表示一个特殊值，常用来描述“空值“。typeof数据类型为object，因此，可认为null是一个特殊的对象。但实际上，通常认为null是它自有类型的唯一一个成员。
 2.undefined不是关键字，表示值的空缺，它是变量的一种取值，表明变量没有初始化。typeof数据类型为undefined。ECMAScript3中将undefined认为可读写的变量，此错误在ECMAScript5中修正，改为只读。
@@ -95,11 +97,57 @@ catch(e){
 }
 
 24、javascript是面向对象的吗？如何创建一个类？
-自然使面向对象的 ，   
+js是基于对象 和事件驱动的简单描述型语言 ，他从服务器端 被下载到客户端，由浏览器运行，
+支持面向对象的    
 var obj = new Object(); 
 方式2 : var obj = {};
+
 25、javascript如何实现类的继承？
 
 26、原型prototype和原型链？
 
 27、闭包
+
+28 什么是DOM？文档对象 模型 什么是BOM？ 浏览器模型  他们之间有什么关系？进行DOM操作的方法 
+
+29 直接创建 对象的方法有哪些？  重要 
+有点 ：简单易用 。
+缺点 ：创建许多相同的对象时，每次都要重复编写代码。 无法确定创建的对象的具体类型 
+
+var 对象 =new Object();
+对象.属性名=属性值;
+对象.函数名=function([参数列表]){
+//语句组 
+}
+//调用 
+对象名.函数名();
+对象初始化器 方式 
+   优点 :结构简明易读.
+   缺点 :创建许多相同的对象时,每次都要重复编写代码.无法确定创建的对象的具体类型.
+   var objectName={
+   property1: value1 ;
+   property2: value2;
+   ...
+   method1:function([paramaeter_list]){
+   //语句组 
+   }
+   methodN:function([parameter_list]){
+   //语句组 
+   }
+   构造函数方式 :
+   优点 :封装属性初始化 .
+   缺点 :构造函数内声明的方法在每次创建新对象时都会重新创建(在javaScript中,函数也是对象).也就是说,构造函数内的方法是与对象绑定的,而不是与类绑定的.
+   function 构造函数([参数列表 ]){
+   this.属性=属性值;
+   this.属性=属性值N;
+   this.函数=myFunc ;
+   }
+   function myFunc([参数列表]){
+   }
+   
+   
+   
+   
+   
+ 
+30 js中的事件链以及冒泡机制，以及如何组织冒泡的发生？
