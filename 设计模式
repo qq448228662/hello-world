@@ -1,12 +1,168 @@
-1.	什么是设计模式？你用过的或者了解哪些设计模式？
-2.	单例模式：创建静态成员变量，构造私有构造方法，创建全局用的接口方法，单个类中多次调用接口方法创建实例化对象是相等的，就是参数名不同。
-单例模式实现的方式有哪些？（不下七种）饿汉模式和懒汉模式？
-3.	单例模式如何保证线程安全？
-4.	你用过volatile关键字吗？他是如何实现的？【设计硬件电路】
-
+1、什么是设计模式？你用过或者了解哪些设计模式？
 
 工厂模式
 代理模式
 观察者模式
+2、什么是单例模式？单例模式实现的方式有哪些？【不下7种】 饿汉模式和懒汉模式实现方式有什么区别？
+在它的核心结构中只包含一个被称为单例的特殊类。通过单例模式可以保证系统中，应用该模式的一个类只有一个实例。
+单例类只能有一个实例；
+单例类必须自己创建自己的唯一实例；
+单例类必须给所有其他对象提供这一实例。
+
+四种：懒汉式单例、饿汉式单例、登记式单例、枚举式单例
+懒汉式单例
+
+
+懒汉式单例
+不着急实例化，需要用的时候才初始化
+原始式
+public class Singleton {
+    private Singleton() {}
+    private static Singleton singleton = null;
+    public static Singleton getInstance() {
+         if (singleton== null) {  
+             singleton= new Singleton();
+         }  
+        return singleton;
+    }
+}
+缺点：
+在反射面前没什么用，因为java反射机制是能够实例化构造方法为private的类的；
+线程不安全，因为线程访问具有随机性，并发环境可能出现多个singleton实例
+线程同步式
+public class Singleton {
+    private Singleton() {}
+    private static Singleton singleton = null;
+
+    //为了保证多线程环境下正确访问，给方法加上同步锁synchronized
+    public static synchronized Singleton getInstance() {
+        if (singleton == null) {
+            singleton = new Singleton();
+        }
+        return singleton;
+    }
+}
+缺点：在方法调用上加了同步，虽然线程安全了，但是每次都有同步，会影响性能，毕竟99%是不需要同步的
+双重锁检查式
+public class Singleton {
+    private Singleton() {}
+    private static Singleton singleton = null;
+
+    //双重锁检查
+    public static Singleton getInstance() {
+        if (singleton == null) {
+            synchronized (Singleton.class) {
+                if (singleton == null) {
+                    singleton = new Singleton3();
+                }
+            }
+        }
+        return singleton;
+    }
+}
+优点：线程安全，且确保了只有第一次调用单例时才会做同步，避免了每次都同步的性能损耗；
+缺点：双重锁降低了程序响应速度和性能
+静态内部类式
+public class Singleton {
+    private Singleton() {}
+
+    //内部类的初始化需要依赖主类，需要先等主类实例化之后，内部类才能开始实例化
+    private static class LazyHolder {
+        //这里加final是为了防止内部将这个属性覆盖掉
+        private static final Singleton INSTANCE = new Singleton();
+    }
+
+    //这里加final是为了防止子类重写父类
+    public static final Singleton getInstance() {
+        return LazyHolder.INSTANCE;
+    }
+}
+优点：利用了classloader机制来保证初始化instance时只有一个线程，线程安全且没有性能损耗
+饿汉式
+类初始化的时候就立刻实例化，天生线程安全
+public class Singleton {
+    private Singleton() {}
+    private static final Singleton singleton = new Singleton();
+    public static Singleton getInstance() {
+        return singleton;
+    }
+}
+缺点：系统启动时，占用资源；如果后期这个单例没有被使用，会造成资源浪费
+注册登记式
+相当于有一个容器装载所有实例，在实例产生之前先检查下容器有没有，如果有就直接取出来，如果没有就先new一个放进去，然后给后面的人用，SpringIoc容器就是一种注册登记式单例
+登记式单例实际上维护了一种单例类的实例，将这些实例存放在一个Map中，对于已经登记过的实例，则从Map直接返回，没有登记的，则先登记，然后返回；
+登记式单例内部实现其实还是用的饿汉式，因为其中的static方法块，它的的单例在类被装载时就被实例化了
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+
+/**
+ * 注册登记式单例
+ * 类似Spring里面的方法，将类名注册，下次从里面直接获取
+ */
+public class Singleton {
+    //Spring最底层的这个容器就是一个map，说白了，IOC容器就是一个map
+    private static Map<String, Singleton> map = new ConcurrentHashMap<String, Singleton>();
+
+    //每个class对应一个map的key，也就是唯一的id
+    static {
+        Singleton singleton = new Singleton();
+        map.put(singleton.getClass().getName(), singleton);
+    }
+
+    //保护默认构造函数
+    protected Singleton() {}
+
+    //静态工厂方法，返回此类唯一的实例
+    public static Singleton getInstance(String name) {
+        if (name == null) {
+            name = Singleton.class.getName();
+        }
+        if (map.get(name) == null) {
+            try {
+                map.put(name, (Singleton) Class.forName(name).newInstance());
+            } catch (InstantiationException e) {
+                e.printStackTrace();
+            } catch (IllegalAccessException e) {
+                e.printStackTrace();
+            } catch (ClassNotFoundException e) {
+                e.printStackTrace();
+            }
+        }
+        return map.get(name);
+    }
+}
+枚举式单例
+这种方式不仅能解决多线程同步问题，而且能防止反序列化重新创建新的对象，不过由于jdk1.5中才加入enum特性，所以不常用
+public enum Singleton {
+    INSTANCE;
+
+    public void getInstance() {
+    }
+}
+
+3、单例模式如何保证线程安全？
+在同步代码块中instance实例化之前进行判断，如果instance为null，才对其进行实例化。这样，就能保证instance只会实例化一次了。也就是所谓的双重检查加锁机制。
+Java语言是支持多线程的，为了解决线程并发的问题，在语言内部引入了 同步块(synchronized) 和 volatile 关键字机制。 
+
+4、你用过volatile关键字，它的是如何实现的？【涉及一些底层硬件的实现机制】
+是一个类型修饰符。volatile 的作用是作为指令关键字，确保本条指令不会因编译器的优化而省略。
+证了不同线程对这个变量进行操作时的可见性，即一个线程修改了某个变量的值，这新值对其他线程来说是立即可见的。（实现可见性）
+禁止进行指令重排序。（实现有序性）
+volatile 只能保证对单次读/写的原子性。i++ 这种操作不能保证原子性。
+
+5、工厂模式？如何实现？
+
+6、什么是代理模式？代理模式有哪几种实现方式？ 动态代理的实现方式（jdk、cglib），这两种实现方式各有什么不同？
+
+7、什么spring框架？用过spring框架么？
+
+8、什么是IOC和DI？说说你对IOC和DI的理解？
+
+@20190906
+9、什么是AOP？AOP的各个构成部分的概念？
+10、AOP的实现方式？【拦截器思想、动态代理】
+11、Spring容器初始化的流程？
+12、Spring bean的加载过程？以及生命周期？
+
 5、 工厂模式如何实现
 6、观察者模式
